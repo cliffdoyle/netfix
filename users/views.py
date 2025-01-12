@@ -70,7 +70,6 @@ def LoginUserView(request):
         form = UserLoginForm()
     return render(request, 'users/login.html', {'form': form})
 
-@login_required
 def company_profile(request, username):
     user = get_object_or_404(User, username=username)
 

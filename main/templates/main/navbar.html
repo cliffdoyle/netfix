@@ -1,23 +1,22 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'services/css/serviceslist.css' %}">
+
 <nav class="navbar">
     <ul>
         <li><a href="/">Home</a></li>
-       
-        <li>
-          <a href="{% url 'services:service_list' %}" class="service-link">
-              View All Services (Most Recent First)
-          </a>
-          </li>
-      
+        
+        
+
         {% if request.user.is_authenticated %}
-      {% if request.user.is_company %}
-        <li><a href="{% url 'users:company_profile' username=request.user.username %}">Profile</a></li>
-      {% elif request.user.is_customer %}
-        <li><a href="{% url 'users:customer_profile' username=request.user.username %}">Profile</a></li>
-      {% endif %}
-      <li><a href="{% url 'main:logout' %}">Logout</a></li>
-    {% else %}
-      <li><a href="{% url 'users:register' %}">Register</a></li>
-      <li><a href="{% url 'users:login_user' %}">Login</a></li>
-    {% endif %}
+            {% if request.user.is_company %}
+                <li><a href="{% url 'users:company_profile' username=request.user.username %}">Profile</a></li>
+            {% elif request.user.is_customer %}
+                <li><a href="{% url 'users:customer_profile' username=request.user.username %}">Profile</a></li>
+            {% endif %}
+            <li><a href="{% url 'main:logout' %}">Logout</a></li>
+        {% else %}
+            <li><a href="{% url 'users:register' %}">Register</a></li>
+            <li><a href="{% url 'users:login_user' %}">Login</a></li>
+        {% endif %}
     </ul>
 </nav>

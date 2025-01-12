@@ -1,13 +1,13 @@
 {% extends 'main/base.html' %}
+{% load static %}
 
 {% block content %}
-<h1>Services</h1>
+<!-- Inside your service_list.html template -->
+<link rel="stylesheet" type="text/css" href="{% static 'services/css/serviceslist.css' %}">
 
-<!-- Service List -->
-<div class="service-list">
     {% for service in services %}
         <div class="service-item">
-            <h2>{{ service.title }}</h2>
+            <h2>{{ service.name }}</h2>
             <p>{{ service.description|truncatewords:20 }}</p>
             <p><strong>Field:</strong> {{ service.field }}</p>
             <p><strong>Created By:</strong>
@@ -31,4 +31,5 @@
         <p>No services available.</p>
     {% endfor %}
 </div>
+
 {% endblock %}

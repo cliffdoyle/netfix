@@ -6,12 +6,31 @@ from django.db.models import Count
 from .models import Service, ServiceRequest,update_service_rating,ServiceRating
 from .forms import CreateNewService, RequestServiceForm,ServiceRatingForm
 from users.models import Company, Customer, User
+from django.http import JsonResponse
 # from django.db.models import Avg
 
+
+def get_services_for_dropdown(request):
+    # Fetch all services (or you can filter as needed)
+    services = Service.objects.all().order_by('-date_created')
+
+    # Prepare the response as a list of dictionaries
+    service_list = []
+    for service in services:
+        service_list.append({
+            'id': service.id,
+            'name': service.name,
+            'description': service.description,
+            'field': service.field,
+        })
+
+    return JsonResponse({'services': service_list})
 
 def service_list(request):
    # Query all services and order them by creation date (most recent first)
     services = Service.objects.all().order_by('-date_created')
+    
+    print(f"Number of services: {services.count()}")
 
     # Fetch unique fields for filtering options in the template (optional)
     fields = Service.objects.values_list('field', flat=True).distinct()

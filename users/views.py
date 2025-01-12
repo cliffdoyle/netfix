@@ -95,14 +95,22 @@ def customer_profile(request, username):
     user = get_object_or_404(User, username=username)
     profile = get_object_or_404(Customer, user=user)
     requested_services = ServiceRequest.objects.filter(customer=profile)
-    available_services=Service.objects.all() #Get all services
+    available_services = Service.objects.all()  # Get all services
+    
+    total_cost = 0
+    for service_request in requested_services:  # Changed variable name from 'request' to 'service_request'
+        service_cost = service_request.service_time * service_request.service.price_hour
+        total_cost += service_cost
+        service_request.service_cost = service_cost
 
     return render(request, 'users/customer_profile.html', {
         'user': user,
         'profile': profile,
         'requested_services': requested_services,
-        'available_services': available_services  # Include this in the context
+        'available_services': available_services,
+        'total_cost': total_cost,  # Pass total cost to the template
     })
+
 @login_required
 def update_profile_image(request):
     if request.user.is_customer:

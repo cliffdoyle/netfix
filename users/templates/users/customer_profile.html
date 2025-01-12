@@ -34,7 +34,13 @@
         Requested on: {{ request.date_requested }}
         <br>
         Provided by: <a href="{% url 'users:company_profile' username=request.service.company.user.username %}">{{ request.service.company.user.username }}</a>
+        <br>
+        Duration:{{request.service_time}} hours
+        <br>
+        Cost:€{{request.service_cost}}
       </li>
     {% endfor %}
   </ul>
+
+  <h3>Total Spent: €{{total_cost}}</h3>
 {% endblock %}

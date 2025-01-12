@@ -26,6 +26,17 @@
             {% endfor %}
         </ul>
 
+         <!-- Dropdown for category selection -->
+         <form method="get" class="filter-form">
+            <label for="field">Filter by Category:</label>
+            <select name="field" id="field" onchange="this.form.submit()">
+                <option value="">All Categories</option>
+                {% for field in fields %}
+                    <option value="{{ field }}" {% if field == selected_field %}selected{% endif %}>{{ field }}</option>
+                {% endfor %}
+            </select>
+        </form>
+
         <!-- Display services for selected category -->
         {% if selected_field %}
             <h2>Services in {{ selected_field }}</h2>

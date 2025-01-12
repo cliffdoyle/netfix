@@ -10,7 +10,12 @@
             <h2>{{ service.title }}</h2>
             <p>{{ service.description|truncatewords:20 }}</p>
             <p><strong>Field:</strong> {{ service.field }}</p>
-            <p><strong>Created By:</strong> {{ service.company.user.username }}</p>
+            <p><strong>Created By:</strong>
+                <!-- Clickable company link -->
+                <a href="{% url 'users:company_profile' username=service.company.user.username %}">
+                    {{ service.company.user.username }}
+                </a>
+            </p>
 
             <!-- Links to view service details -->
             <a href="{% url 'services:service_detail' service.id %}">View Details</a>

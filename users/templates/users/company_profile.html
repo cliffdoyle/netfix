@@ -10,7 +10,7 @@
 <h1>{{ user.username }}'s Profile</h1>
 <p>Email: {{ user.email }}</p>
 <p>Field of Work: {{ profile.field }}</p>
-{% if user.is_company %}
+{% if user.is_company and is_company_owner%}
     <p></p><a href="{% url 'users:update_profile_image' %}" class="details-button">Update Profile Image</a></p>
 {% endif %}
 
@@ -21,7 +21,7 @@
     {% endfor %}
 </ul>
 
-{% if user.is_company %}
+{% if user.is_company and is_company_owner %}
 <a href="{% url 'services:service_create' %}" class="details-button">Create New Service</a>
 {% endif %}
 

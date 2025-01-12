@@ -77,10 +77,15 @@ def company_profile(request, username):
     #Retrieve the logged-in user's company
     profile = get_object_or_404(Company, user=user)
     services = Service.objects.filter(company=profile)
+    
+     # Check if the user is the company owner
+    is_company_owner = request.user == user  # Compare the logged-in user with the company owner
+
     return render(request, 'users/company_profile.html', {
         'user': user,
         'profile': profile,
-        'services': services
+        'services': services,
+        'is_company_owner': is_company_owner,  # Pass the comparison result
     })
 @login_required
 def profile(request):

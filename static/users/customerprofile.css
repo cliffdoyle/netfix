@@ -1,0 +1,93 @@
+.profile-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.profile-image-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile-image-container img {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 50%;
+    border: 3px solid #ddd;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.update-profile-box {
+    display: inline-block;
+    padding: 15px 25px;
+    background-color: #f4f4f9;
+    border: 2px dashed #ff7043;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #333;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.update-profile-box p {
+    margin: 0;
+}
+
+.update-link {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #ff7043;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.update-link:hover {
+    background-color: #e64a19;
+    transition: background-color 0.3s;
+}
+
+h1, h2, h3 {
+    color: #333;
+}
+
+h2, h3 {
+    margin-top: 40px;
+}
+
+ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+ul li {
+    margin-bottom: 15px;
+}
+
+ul li a {
+    color: #ff7043;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+ul li a:hover {
+    color: #e64a19;
+    transition: color 0.3s;
+}
+
+.details-button {
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.details-button:hover {
+    background-color: #388E3C;
+}

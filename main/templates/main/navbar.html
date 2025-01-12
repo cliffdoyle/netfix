@@ -4,6 +4,25 @@
 <nav class="navbar">
     <ul>
         <li><a href="/">Home</a></li>
+        <li class="home-links">
+          <a href="{% url 'services:service_list' %}" class="service-link">
+              View All Services (Most Recent First)
+          </a>
+        </li>
+
+         <!-- Dropdown for category selection -->
+         <li class="category-dropdown">
+          <form method="get" class="filter-form" action="{% url 'main:services_by_category' 'placeholder' %}" id="categoryForm">
+              <label for="field">Filter by Category:</label>
+              <select name="field"  id="field" onchange="navigateToCategory(this)">
+                  <option value="">Select Category</option>
+                  {% for field in fields %}
+                      <option value="{{ field }}" {% if field == selected_field %}selected{% endif %}>{{ field }}</option>
+                  {% endfor %}
+              </select>
+          </form>
+      </li>
+
         
         
 
@@ -20,3 +39,14 @@
         {% endif %}
     </ul>
 </nav>
+
+<script>
+  function navigateToCategory(selectElement) {
+      const selectedValue = selectElement.value;
+      const form = document.getElementById('categoryForm');
+      if (selectedValue) {
+          form.action = `/services/${selectedValue}/`;
+          form.submit();
+      }
+  }
+</script>

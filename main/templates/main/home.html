@@ -9,34 +9,26 @@
         <p class="site_title">NetFix</p>
         <img class="home_logo" src="static/css/logo.png" alt="logo">
 
-        <!-- Link to View All Services (Most Recent First) -->
-        <div class="home-links">
-            <a href="{% url 'services:service_list' %}" class="service-link">
-                View All Services (Most Recent First)
-            </a>
-        </div>
-
         <!-- Link to Most Requested Services -->
-        <div class="most-requested-section">
-            <h3>Check Out the Most Requested Services!</h3>
-            <p>Explore the top 10 most requested services by users.</p>
-            <a href="{% url 'services:most_requested_services' %}" class="btn btn-primary">View Most Requested Services</a>
-        </div>
+        <h1>Most Requested Services</h1>
+        <ul>
+            {% for service in most_requested_services %}
+                <li>
+                    <a href="{% url 'services:service_detail' service.id %}">{{ service.name }}</a>
+                    - {{ service.field }} - ${{ service.price_hour }} per hour
+                    <br>
+                    Provided by: <a href="{% url 'users:company_profile' username=service.company.user.username %}">{{ service.company.user.username }}</a>
+                    <br>
+                    Requests: {{ service.request_count }}
+                </li>
+            {% empty %}
+                <p>No services have been requested yet.</p>
+            {% endfor %}
+        </ul>
 
-        <!-- Dropdown for category selection -->
-        <form method="get" class="filter-form">
-            <label for="field">Filter by Category:</label>
-            <select name="field" id="field" onchange="this.form.submit()">
-                <option value="">All Categories</option>
-                {% for field in fields %}
-                    <option value="{{ field }}" {% if field == selected_field %}selected{% endif %}>{{ field }}</option>
-                {% endfor %}
-            </select>
-        </form>
-
+        <!-- Display services for selected category -->
         {% if selected_field %}
             <h2>Services in {{ selected_field }}</h2>
-            <!-- Display services for selected category -->
             <div class="service-list">
                 {% if services %}
                     {% for service in services %}

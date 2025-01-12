@@ -1,0 +1,27 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}
+  User Type
+{% endblock %}
+
+{% block content %}
+  <div class="register-container1">
+    <p class="choice_text">Choose whether you want to be a customer or a company</p>
+    
+    <div class="cards-container">
+      <div class="card">
+        <a href="{% url 'users:register_company' %}">
+          <img src="{% static 'css/company.jpg' %}" alt="company">
+          <p class="label_images">Company</p>
+        </a>
+      </div>
+
+      <div class="card">
+        <a href="{% url 'users:register_customer' %}">
+          <img src="{% static 'css/customer.jpg' %}" alt="customer">
+          <p class="label_images">Customer</p>
+        </a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

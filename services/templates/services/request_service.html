@@ -1,0 +1,15 @@
+<!-- filepath: /home/cliff/netfix/services/templates/services/request_service.html -->
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}
+    Request Service
+{% endblock %}
+{% block content %}
+    <link rel="stylesheet" type="text/css" href="{% static 'services/css/services.css' %}">
+    <h2>Request Service</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="details-button">Request</button>
+    </form>
+{% endblock %}

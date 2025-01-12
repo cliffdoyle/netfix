@@ -1,0 +1,28 @@
+{% extends 'main/base.html' %}
+
+{% block title %}{{ user.username }}'s Profile{% endblock %}
+
+{% block content %}
+{% if profile.profile_image %}
+    <img src="{{ profile.profile_image.url }}" alt="Company Image" class="company-profile-image" style="max-width: 150px; max-height: 150px; border-radius: 50%;">
+{% endif %}
+
+<h1>{{ user.username }}'s Profile</h1>
+<p>Email: {{ user.email }}</p>
+<p>Field of Work: {{ profile.field }}</p>
+{% if user.is_company %}
+    <p></p><a href="{% url 'users:update_profile_image' %}" class="details-button">Update Profile Image</a></p>
+{% endif %}
+
+<h2>Services Provided</h2>
+<ul>
+    {% for service in services %}
+        <li><a href="{% url 'services:service_detail' service.id %}">{{ service.name }}</a></li>
+    {% endfor %}
+</ul>
+
+{% if user.is_company %}
+<a href="{% url 'services:service_create' %}" class="details-button">Create New Service</a>
+{% endif %}
+
+{% endblock %}

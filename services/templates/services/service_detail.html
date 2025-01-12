@@ -5,11 +5,35 @@
     <link rel="stylesheet" type="text/css" href="{% static 'services/css/services.css' %}">
     <div class='service_info_header'>
         <h1>{{ service.name }} -- {{ service.price_hour }}€/hour</h1>
-        <h5>Provided by: <a href="{% url 'users:company_profile' username=service.company.user.username %}">{{ service.company.user.username }}</a></h5>
+        <h5>
+            Provided by: 
+            <a href="{% url 'users:company_profile' username=service.company.user.username %}">
+                {{ service.company.user.username }}
+            </a>
+        </h5>
     </div>
     <h3>{{ service.field }}</h3>
     <p style="text-align: left;">{{ service.description }}</p>
-    {% if request.user.is_customer %}
-        <a href="{% url 'services:request_service' service.id %}" class="details-button">Request Service</a>
+    <p><strong>Rating:</strong> {{ service.rating }}/5</p>
+
+    {% if request.user.is_authenticated %}
+        {% if request.user.is_customer %}
+            <a href="{% url 'services:request_service' service.id %}" class="details-button">Request Service</a>
+        {% endif %}
+        
+        <!-- Allow customers to rate the service -->
+        {% if request.user.is_customer %}
+            <form method="post" action="{% url 'services:rate_service' service.id %}">
+                {% csrf_token %}
+                <label for="rating">Rate this service:</label>
+                <select name="rating" id="rating" required>
+                    <option value="">Select a rating</option>
+                    {% for i in "12345" %}
+                        <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="details-button">Submit Rating</button>
+            </form>
+        {% endif %}
     {% endif %}
 {% endblock %}

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Service, ServiceRequest
+from .models import Service, ServiceRequest,ServiceRating
 
 class CreateNewService(forms.ModelForm):
     class Meta:
@@ -23,3 +23,11 @@ class RequestServiceForm(forms.ModelForm):
         super(RequestServiceForm, self).__init__(*args, **kwargs)
         self.fields['address'].widget.attrs['placeholder'] = 'Enter Address'
         self.fields['service_time'].widget.attrs['placeholder'] = 'Enter Service Time (hours)'
+        
+class ServiceRatingForm(forms.ModelForm):
+    class Meta:
+        model = ServiceRating
+        fields = ['rating', 'review']
+        widgets = {
+            'rating': forms.RadioSelect(choices=[(i, str(i)) for i in range(1, 6)]),  # Display radio buttons for ratings
+        }

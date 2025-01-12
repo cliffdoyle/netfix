@@ -32,6 +32,7 @@ class Company(models.Model):
         ('Water Heaters', 'Water Heaters'),
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    name = models.CharField(max_length=100, default='unknown')
     field = models.CharField(max_length=70, choices=FIELD_CHOICES, blank=False, null=False)
     rating = models.IntegerField(validators=[MaxValueValidator(5), MinValueValidator(0)], default=0)
     profile_image = models.ImageField(upload_to='company_images/', blank=True, null=True)

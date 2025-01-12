@@ -10,4 +10,5 @@ urlpatterns = [
     path('<int:id>/', v.service_detail, name='service_detail'),
     path('<int:id>/request_service/', v.request_service, name='request_service'),
     path('<slug:field>/', v.service_field, name='service_field'), #updated
+    path('rate/<int:service_id>/', v.rate_service, name='rate_service'),
 ]

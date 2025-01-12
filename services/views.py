@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import HttpResponse
 from django.db.models import Count
-from .models import Service, ServiceRequest
-from .forms import CreateNewService, RequestServiceForm
+from .models import Service, ServiceRequest,update_service_rating,ServiceRating
+from .forms import CreateNewService, RequestServiceForm,ServiceRatingForm
 from users.models import Company, Customer, User
+# from django.db.models import Avg
+
 
 def service_list(request):
    # Query all services and order them by creation date (most recent first)
@@ -19,7 +22,7 @@ def service_list(request):
     })
 
 def most_requested_services(request):
-    services = Service.objects.annotate(request_count=Count('servicerequest')).order_by('-request_count')[:10]
+    services = Service.objects.annotate(request_count=Count('servicerequest')).filter(request_count__gt=0).order_by('-request_count')[:10]
     return render(request, 'services/most_requested_services.html', {'services': services})
 
 @login_required
@@ -46,11 +49,62 @@ def create(request):
         form = CreateNewService()
     return render(request, 'services/service_create.html', {'form': form})
 
+
+
 def service_detail(request, id):
     service = get_object_or_404(Service, id=id)
-    company=service.company # get the company that created the service
-    return render(request, 'services/service_detail.html', {'service': service, 'company': company})
+    company = service.company  # Get the company that created the service
 
+    # Check if the user has already rated this service
+    user_rating = None
+    if request.user.is_authenticated:
+        user_rating = ServiceRating.objects.filter(service=service, user=request.user).first()
+
+    if request.method == 'POST' and user_rating is None:
+        # Handle rating submission
+        form = ServiceRatingForm(request.POST)
+        if form.is_valid():
+            rating = form.save(commit=False)
+            rating.service = service
+            rating.user = request.user
+            rating.save()
+
+            # Update the service's average rating
+            update_service_rating(service)
+
+            return redirect('services:service_detail', id=service.id)
+    else:
+        form = ServiceRatingForm()
+
+    return render(request, 'services/service_detail.html', {
+        'service': service,
+        'company': company,
+        'form': form,
+        'user_rating': user_rating
+    })
+    
+@login_required
+def rate_service(request, service_id):
+    service = get_object_or_404(Service, id=service_id)
+
+    if request.method == "POST":
+        rating = int(request.POST.get("rating", 0))
+        review = request.POST.get("review", "")
+
+        # Ensure the rating is within valid bounds
+        if 0 <= rating <= 5:
+            # Create or update the rating for the current user
+            ServiceRating.objects.update_or_create(
+                service=service, user=request.user,
+                defaults={"rating": rating, "review": review}
+            )
+            # Update the average service rating
+            update_service_rating(service)
+            return redirect("services:service_detail", id=service.id)
+
+        return HttpResponse("Invalid rating", status=400)
+
+    return HttpResponse("Invalid request method", status=405)
 @login_required
 def request_service(request, id):
     service = get_object_or_404(Service, id=id)

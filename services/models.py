@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from users.models import Company, Customer, User
+from django.db.models import Avg
+
 
 class Service(models.Model):
     FIELD_CHOICES = (
@@ -36,3 +38,20 @@ class ServiceRequest(models.Model):
 
     def __str__(self):
         return f"{self.customer.user.username} requested {self.service.name}"
+    
+class ServiceRating(models.Model):
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
+    review = models.TextField(blank=True, null=True)  # Optional field for the review
+
+    def __str__(self):
+        return f"{self.user.username} rated {self.service.name} - {self.rating}/5"
+    
+def update_service_rating(service):
+    ratings = ServiceRating.objects.filter(service=service)
+    if ratings.exists():
+        average_rating = ratings.aggregate(Avg('rating'))['rating__avg']
+        service.rating = round(average_rating)  # Round to the nearest whole number
+        service.save()
+

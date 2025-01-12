@@ -8,11 +8,12 @@
 {% else %}
   <p>No profile image available.</p>
 {% endif %}
-<p><a href="{% url 'users:update_profile_image' %}">Update Profile Image</a></p>
 
-  <h1>{{ user.username }}'s Profile</h1>
-  <p>Email: {{ user.email }}</p>
-  <p>Date of Birth: {{ profile.birth }}</p>
+<h1>{{ user.username }}'s Profile</h1>
+<p>Email: {{ user.email }}</p>
+<p>Date of Birth: {% if profile.birth %}{{ profile.birth }}{% else %}Not provided{% endif %}</p>
+
+<p><a href="{% url 'users:update_profile_image' %}">Update Profile Image</a></p>
   <h2>Available Services</h2>
   <ul>
     {% for service in available_services %}

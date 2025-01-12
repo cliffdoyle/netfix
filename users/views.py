@@ -24,7 +24,11 @@ class CustomerSignUpView(CreateView):
         user = form.save(commit=False)
         user.is_customer = True
         user.save()
-        Customer.objects.create(user=user)
+        
+         # Pass the 'birth' value from the form to the Customer model
+        birth = form.cleaned_data.get('birth')
+        Customer.objects.create(user=user, birth=birth)
+        # Customer.objects.create(user=user)
         messages.success(self.request, 'Registration successful. Please log in.')
         return redirect('users:login_user')
 
@@ -98,6 +102,7 @@ def profile(request):
 def customer_profile(request, username):
     user = get_object_or_404(User, username=username)
     profile = get_object_or_404(Customer, user=user)
+    print(profile.birth)
     requested_services = ServiceRequest.objects.filter(customer=profile)
     available_services = Service.objects.all()  # Get all services
     

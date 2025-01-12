@@ -65,7 +65,7 @@ ROOT_URLCONF = 'netfix.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates',)],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -142,4 +142,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Media configurations
 MEDIA_URL = '/media/'  # Public URL for serving media files
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Directory to store uploaded files
+MEDIA_ROOT = BASE_DIR, 'media'  # Directory to store uploaded files

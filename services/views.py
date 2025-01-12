@@ -7,31 +7,15 @@ from .forms import CreateNewService, RequestServiceForm
 from users.models import Company, Customer, User
 
 def service_list(request):
-    # Get query parameters for filtering and sorting
-    field = request.GET.get('field', None)  # Filter by field
-    sort_by = request.GET.get('sort_by', None)  # Sort options: 'popularity' or 'date'
+   # Query all services and order them by creation date (most recent first)
+    services = Service.objects.all().order_by('-date_created')
 
-    # Queryset for services
-    services = Service.objects.all()
-
-    # Apply filtering
-    if field:
-        services = services.filter(field=field)
-
-    # Apply sorting
-    if sort_by == 'popularity':
-        services = services.annotate(request_count=Count('servicerequest')).order_by('-request_count')
-    else:  # Default: Sort by most recent
-        services = services.order_by('-date_created')
-
-    # Fetch unique fields for filtering options in the template
+    # Fetch unique fields for filtering options in the template (optional)
     fields = Service.objects.values_list('field', flat=True).distinct()
 
     return render(request, 'services/service_list.html', {
         'services': services,
         'fields': fields,
-        'current_field': field,
-        'current_sort': sort_by,
     })
 
 def most_requested_services(request):

@@ -1,24 +1,7 @@
-{% extends 'base.html' %}
+{% extends 'main/base.html' %}
 
 {% block content %}
 <h1>Services</h1>
-
-<!-- Filtering Options -->
-<form method="get" class="filter-form">
-    <label for="field">Filter by Field:</label>
-    <select name="field" id="field" onchange="this.form.submit()">
-        <option value="">All Fields</option>
-        {% for f in fields %}
-            <option value="{{ f }}" {% if f == current_field %}selected{% endif %}>{{ f }}</option>
-        {% endfor %}
-    </select>
-
-    <label for="sort_by">Sort by:</label>
-    <select name="sort_by" id="sort_by" onchange="this.form.submit()">
-        <option value="">Most Recent</option>
-        <option value="popularity" {% if current_sort == 'popularity' %}selected{% endif %}>Popularity</option>
-    </select>
-</form>
 
 <!-- Service List -->
 <div class="service-list">
@@ -29,8 +12,15 @@
             <p><strong>Field:</strong> {{ service.field }}</p>
             <p><strong>Created By:</strong> {{ service.company.user.username }}</p>
 
+            <!-- Links to view service details -->
             <a href="{% url 'services:service_detail' service.id %}">View Details</a>
-            <a href="{% url 'services:request_service' service.id %}">Request Service</a>
+
+            <!-- Conditionally display the "Request Service" link for authenticated customers -->
+            {% if user.is_authenticated and user.is_customer %}
+                <a href="{% url 'services:request_service' service.id %}">Request Service</a>
+            {% else %}
+                <p><a href="{% url 'users:login_user' %}">Login to request service</a></p>
+            {% endif %}
         </div>
     {% empty %}
         <p>No services available.</p>

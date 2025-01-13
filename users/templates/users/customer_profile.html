@@ -1,60 +1,248 @@
 {% extends 'main/base.html' %}
+{% load static %}
 
 {% block title %}{{ user.username }}'s Profile{% endblock %}
 
+{% block extra_css %}
+  <link rel="stylesheet" type="text/css" href="{% static 'users/customerprofile.css' %}"/>
+  <style>
+    :root {
+        --primary-color: #007bff;
+        --secondary-color: #6c757d;
+        --background-color: #f8f9fa;
+        --text-color: #343a40;
+        --card-background: #ffffff;
+        --card-border: 1px solid #dee2e6;
+        --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+    }
+
+    .profile-container {
+        max-width: 1200px;
+        margin: 50px auto;
+        padding: 20px;
+    }
+
+    .profile-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .profile-image-box {
+        width: 200px;
+        height: 200px;
+        margin: 0 auto 20px;
+        border-radius: 12px;
+        background-color: var(--card-background);
+        border: 2px solid var(--primary-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+        position: relative;
+    }
+
+    .profile-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .placeholder-text {
+        text-align: center;
+        color: var(--secondary-color);
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .profile-username {
+        font-size: 28px;
+        font-weight: bold;
+        color: var(--text-color);
+        margin-bottom: 10px;
+    }
+
+    .profile-email, .profile-birth {
+        font-size: 16px;
+        color: var(--secondary-color);
+        margin-bottom: 10px;
+    }
+
+    .update-link {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 8px 16px;
+        font-size: 14px;
+        color: var(--primary-color);
+        text-decoration: none;
+        border: 1px solid var(--primary-color);
+        border-radius: 4px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .update-link:hover {
+        background-color: var(--primary-color);
+        color: #fff;
+    }
+
+    .services-section {
+        margin-bottom: 40px;
+    }
+
+    .section-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: var(--text-color);
+        margin-bottom: 20px;
+    }
+
+    .cards-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    .service-card {
+        background-color: var(--card-background);
+        border: var(--card-border);
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: var(--card-shadow);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .service-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .service-name {
+        font-size: 18px;
+        font-weight: bold;
+        color: var(--primary-color);
+        margin-bottom: 10px;
+    }
+
+    .service-name a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .service-name a:hover {
+        text-decoration: underline;
+    }
+
+    .service-field, .service-price, .service-provider, .service-details {
+        font-size: 14px;
+        color: var(--secondary-color);
+        margin-bottom: 8px;
+    }
+
+    .btn-primary {
+        display: inline-block;
+        padding: 10px 16px;
+        font-size: 14px;
+        color: #fff;
+        background-color: var(--primary-color);
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .total-spent {
+        text-align: center;
+        margin-top: 40px;
+        font-size: 18px;
+        font-weight: bold;
+        color: var(--text-color);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .cards-container {
+            grid-template-columns: 1fr;
+        }
+
+        .profile-username {
+            font-size: 24px;
+        }
+
+        .section-title {
+            font-size: 20px;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-{% load static %}
-
-<!-- Link to the customerprofile.css file -->
-<link rel="stylesheet" type="text/css" href="{% static 'users/customerprofile.css' %}">
-
 <div class="profile-container">
-    {% if profile.profile_image %}
-    <div class="profile-image-container">
-        <img src="{{ profile.profile_image.url }}" alt="{{ user.username }}'s Profile Image">
+    <div class="profile-header">
+        <div class="profile-image-box">
+            {% if profile.profile_image %}
+            <img src="{{ profile.profile_image.url }}" alt="{{ user.username }}'s Profile Image" class="profile-image">
+            {% else %}
+            <div class="placeholder-text">
+                <p>Upload a profile picture</p>
+            </div>
+            {% endif %}
+        </div>
+        <h1 class="profile-username">{{ user.username }}'s Profile</h1>
+        <p class="profile-email">Email: {{ user.email }}</p>
+        <p class="profile-birth">Date of Birth: {% if profile.birth %}{{ profile.birth }}{% else %}Not provided{% endif %}</p>
+        <a href="{% url 'users:update_profile_image' %}" class="update-link">Update Profile Image</a>
     </div>
-    {% else %}
-    <div class="update-profile-box">
-        <p>Update profile image.</p>
+    <!-- <style>
+        .profile-image-box {
+            border: 2px solid red; /* Temporary debug style */
+        }
+    </style> -->
+
+    <div class="services-section">
+        <h2 class="section-title">Available Services</h2>
+        <div class="cards-container">
+            {% for service in available_services %}
+            <div class="service-card">
+                <h3 class="service-name"><a href="{% url 'services:service_detail' service.id %}">{{ service.name }}</a></h3>
+                <p class="service-field"><strong>Field:</strong> {{ service.field }}</p>
+                <p class="service-price"><strong>Price:</strong> ${{ service.price_hour }} per hour</p>
+                <p class="service-provider"><strong>Provider:</strong> <a href="{% url 'users:company_profile' username=service.company.user.username %}">{{ service.company.user.username }}</a></p>
+                <a href="{% url 'services:request_service' service.id %}" class="btn-primary">Request Service</a>
+            </div>
+            {% endfor %}
+        </div>
     </div>
-    {% endif %}
 
-    <h1>{{ user.username }}'s Profile</h1>
-    <p>Email: {{ user.email }}</p>
-    <p>Date of Birth: {% if profile.birth %}{{ profile.birth }}{% else %}Not provided{% endif %}</p>
+    <div class="services-section">
+        <h2 class="section-title">Requested Services</h2>
+        <div class="cards-container">
+            {% for request in requested_services %}
+            <div class="service-card">
+                <h3 class="service-name"><a href="{% url 'services:service_detail' request.service.id %}">{{ request.service.name }}</a></h3>
+                <p class="service-field"><strong>Field:</strong> {{ request.service.field }}</p>
+                <p class="service-price"><strong>Price:</strong> ${{ request.service.price_hour }} per hour</p>
+                <p class="service-provider"><strong>Provider:</strong> <a href="{% url 'users:company_profile' username=request.service.company.user.username %}">{{ request.service.company.user.username }}</a></p>
+                <p class="service-details"><strong>Requested on:</strong> {{ request.date_requested }}</p>
+                <p class="service-details"><strong>Duration:</strong> {{ request.service_time }} hours</p>
+                <p class="service-details"><strong>Cost:</strong> €{{ request.service_cost }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 
-    <p><a href="{% url 'users:update_profile_image' %}" class="update-link">Update Profile Image</a></p>
-
-    <h2>Available Services</h2>
-    <ul>
-        {% for service in available_services %}
-        <li>
-            <a href="{% url 'services:service_detail' service.id %}">{{ service.name }}</a> - {{ service.field }} - ${{ service.price_hour }} per hour
-            <br>
-            Provided by: <a href="{% url 'users:company_profile' username=service.company.user.username %}">{{ service.company.user.username }}</a>
-            <br>
-            <a href="{% url 'services:request_service' service.id %}" class="details-button">Request Service</a>
-        </li>
-        {% endfor %}
-    </ul>
-
-    <h2>Requested Services</h2>
-    <ul>
-        {% for request in requested_services %}
-        <li>
-            <a href="{% url 'services:service_detail' request.service.id %}">{{ request.service.name }}</a> - {{ request.service.field }} - ${{ request.service.price_hour }} per hour
-            <br>
-            Requested on: {{ request.date_requested }}
-            <br>
-            Provided by: <a href="{% url 'users:company_profile' username=request.service.company.user.username %}">{{ request.service.company.user.username }}</a>
-            <br>
-            Duration: {{ request.service_time }} hours
-            <br>
-            Cost: €{{ request.service_cost }}
-        </li>
-        {% endfor %}
-    </ul>
-
-    <h3>Total Spent: €{{ total_cost }}</h3>
+    <div class="total-spent">
+        <h3>Total Spent: €{{ total_cost }}</h3>
+    </div>
 </div>
 {% endblock %}

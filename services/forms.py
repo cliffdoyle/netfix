@@ -7,12 +7,23 @@ class CreateNewService(forms.ModelForm):
         fields = ['name', 'description', 'price_hour', 'field']
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)  # Get the user from kwargs
         super(CreateNewService, self).__init__(*args, **kwargs)
         # adding placeholders to form fields
         self.fields['name'].widget.attrs['placeholder'] = 'Enter Service Name'
         self.fields['description'].widget.attrs['placeholder'] = 'Enter Description'
         self.fields['price_hour'].widget.attrs['placeholder'] = 'Enter Price per Hour'
         self.fields['name'].widget.attrs['autocomplete'] = 'off'
+        # Filter field choices based on the user's company
+        if user and hasattr(user, 'company'):
+            company_field=user.company.field
+            if company_field != 'All in One':
+                #Show only the company's field
+                self.fields['field'].choices=[(company_field,company_field)]
+            else:
+                # Keep all available choices if 'All in One'
+                self.fields['field'].choices = Service.FIELD_CHOICES
+                
 
 class RequestServiceForm(forms.ModelForm):
     class Meta:

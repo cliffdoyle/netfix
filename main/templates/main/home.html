@@ -1,61 +1,83 @@
 {% extends 'main/base.html' %}
+{% load static %}
 
 {% block title %}
     NetFix
 {% endblock %}
 
+<link
+rel="stylesheet"
+type="text/css"
+href="{% static 'home/home.css' %}"
+/>
+
 {% block content %}
-    <div style="margin-top: 50px;">
+<div class="container" style="margin-top: 50px;">
+    <div class="header">
         <p class="site_title">NetFix</p>
         <img class="home_logo" src="static/css/logo.png" alt="logo">
-
-        <!-- Link to Most Requested Services -->
-        <h1>Most Requested Services</h1>
-        <ul>
-            {% for service in most_requested_services %}
-                <li>
-                    <a href="{% url 'services:service_detail' service.id %}">{{ service.name }}</a>
-                    - {{ service.field }} - ${{ service.price_hour }} per hour
-                    <br>
-                    Provided by: <a href="{% url 'users:company_profile' username=service.company.user.username %}">{{ service.company.user.username }}</a>
-                    <br>
-                    Requests: {{ service.request_count }}
-                </li>
-            {% empty %}
-                <p>No services have been requested yet.</p>
-            {% endfor %}
-        </ul>
-
-         <!-- Dropdown for category selection -->
-         <form method="get" class="filter-form">
-            <label for="field">Filter by Category:</label>
-            <select name="field" id="field" onchange="this.form.submit()">
-                <option value="">All Categories</option>
-                {% for field in fields %}
-                    <option value="{{ field }}" {% if field == selected_field %}selected{% endif %}>{{ field }}</option>
-                {% endfor %}
-            </select>
-        </form>
-
-        <!-- Display services for selected category -->
-        {% if selected_field %}
-            <h2>Services in {{ selected_field }}</h2>
-            <div class="service-list">
-                {% if services %}
-                    {% for service in services %}
-                        <div class="service-item">
-                            <h3>{{ service.name }}</h3>
-                            <p>{{ service.description|truncatewords:20 }}</p>
-                            <p><strong>Price/hour:</strong> ${{ service.price_hour }}</p>
-                            <p><strong>Rating:</strong> {{ service.rating }}/5</p>
-                            <p><strong>Company:</strong> {{ service.company.user.username }}</p>
-                            <a href="{% url 'services:service_detail' service.id %}">View Details</a>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <p>No services available in this category yet.</p>
-                {% endif %}
-            </div>
-        {% endif %}
     </div>
+
+    <!-- Most Requested Services Section -->
+    <section class="services-section">
+        <h1>Most Requested Services</h1>
+        <div class="cards-container">
+            {% for service in most_requested_services %}
+            <div class="service-card">
+                <h3>{{ service.name }}</h3>
+                <p><strong>Field:</strong> {{ service.field }}</p>
+                <p><strong>Price:</strong> ${{ service.price_hour }} per hour</p>
+                <p><strong>Provider:</strong> 
+                    <a href="{% url 'users:company_profile' username=service.company.user.username %}">
+                        {{ service.company.user.username }}
+                    </a>
+                </p>
+                <p><strong>Requests:</strong> {{ service.request_count }}</p>
+                <a class="btn-primary" href="{% url 'services:service_detail' service.id %}">View Details</a>
+            </div>
+            {% empty %}
+            <p>No services have been requested yet.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Filter by Category Section -->
+    <section class="filter-section">
+        <div class="filter-card">
+            <h2>Filter by Category</h2>
+            <form method="get" class="filter-form">
+                <select name="field" id="field" class="filter-dropdown" onchange="this.form.submit()">
+                    <option value="">All Categories</option>
+                    {% for field in fields %}
+                    <option value="{{ field }}" {% if field == selected_field %}selected{% endif %}>
+                        {{ field }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+    </section>
+
+    <!-- Selected Category Services -->
+    {% if selected_field %}
+    <section class="category-services-section">
+        <h2>Services in {{ selected_field }}</h2>
+        <div class="cards-container">
+            {% for service in services %}
+            <div class="service-card">
+                <h3>{{ service.name }}</h3>
+                <p>{{ service.description|truncatewords:20 }}</p>
+                <p><strong>Price/hour:</strong> ${{ service.price_hour }}</p>
+                <p><strong>Rating:</strong> {{ service.rating }}/5</p>
+                <p><strong>Company:</strong> {{ service.company.user.username }}</p>
+                <a class="btn-primary" href="{% url 'services:service_detail' service.id %}">View Details</a>
+            </div>
+            {% endfor %}
+        </div>
+        {% if not services %}
+        <p>No services available in this category yet.</p>
+        {% endif %}
+    </section>
+    {% endif %}
+</div>
 {% endblock %}

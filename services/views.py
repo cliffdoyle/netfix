@@ -52,7 +52,7 @@ def create(request):
         messages.error(request, 'You must be a company to create a service.')
         return redirect('users:customer_profile', username=request.user.username)
     if request.method == 'POST':
-        form = CreateNewService(request.POST)
+        form = CreateNewService(request.POST,user=request.user)
         if form.is_valid():
             service = form.save(commit=False)
             #Check if the service's field matches the company's field
@@ -65,7 +65,7 @@ def create(request):
             messages.success(request, 'Service created successfully.')
             return redirect('services:service_list')
     else:
-        form = CreateNewService()
+        form = CreateNewService(user=request.user)
     return render(request, 'services/service_create.html', {'form': form})
 
 

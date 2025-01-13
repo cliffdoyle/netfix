@@ -1,0 +1,108 @@
+/* General styles for the page */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f0f4f8;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container for the main content */
+.register-container1 {
+    text-align: center;
+    padding: 50px 20px;
+    margin-top: 50px;
+}
+
+/* Choice text styling */
+.choice_text {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 40px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Cards container */
+.cards-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+/* Individual card styles */
+.card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 250px;
+    text-align: center;
+    padding: 15px;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Card image styling */
+.card img {
+    width: 100%;
+    height: 200px; /* Adjusted height for a better fit */
+    object-fit: cover;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+/* Label on cards */
+.label_images {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #fff;
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 0 0 12px 12px;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover effect on cards */
+.card:hover {
+    transform: scale(1.05); /* Slight zoom effect */
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+}
+
+.card img:hover {
+    transform: scale(1.1); /* Slight zoom on image */
+}
+
+/* Link styling inside card */
+.card a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Styling for label hover effect */
+.card a:hover .label_images {
+    background-color: #0066cc; /* Highlight on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .cards-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .card {
+        width: 80%;
+        margin-bottom: 20px;
+    }
+}

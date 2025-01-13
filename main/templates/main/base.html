@@ -12,11 +12,15 @@
     {% block extra_css %}{% endblock %}
   </head>
   <body>
+    <!-- Navbar -->
     {% include 'main/navbar.html' %}
-    <!-- places the content of navbar.html here -->
-    <div class='content'>
+
+    <!-- Main Content -->
+    <div class="content">
       {% block content %} replace me {% endblock %}
     </div>
+
+    <!-- Footer -->
     <footer>
       <p>&copy; 2025 NetFix - All Rights Reserved</p>
     </footer>

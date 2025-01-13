@@ -34,25 +34,37 @@
     }
 
     .company-profile-header {
+        width: 100%;
         text-align: center;
-        margin-bottom: 20px;
+        margin-bottom: 40px;
     }
 
     .company-profile-image {
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
+        width: 200px;
+        height: 200px;
+        border-radius: 12px;
         object-fit: cover;
         border: 3px solid var(--primary-color);
+        margin-bottom: 20px;
     }
 
     .image-placeholder {
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
+        width: 200px;
+        height: 200px;
+        border-radius: 12px;
         background-color: var(--secondary-color);
         border: 3px solid var(--primary-color);
-        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+    }
+
+    .image-placeholder p {
+        color: var(--card-background);
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
     }
 
     .company-profile-header h1 {
@@ -68,68 +80,80 @@
         margin-bottom: 10px;
     }
 
-    .company-profile-header a {
-        color: var(--primary-color);
+    .details-button {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #fff;
+        background-color: var(--primary-color);
+        border: none;
+        border-radius: 4px;
         text-decoration: none;
+        transition: background-color 0.3s ease;
+        margin-top: 10px;
     }
 
-    .company-profile-header a:hover {
-        text-decoration: underline;
+    .details-button:hover {
+        background-color: #0056b3;
     }
 
     .services-section {
-        margin-top: 30px;
+        margin-bottom: 40px;
     }
 
-    .services-section h2 {
+    .section-title {
         font-size: 24px;
         font-weight: bold;
         color: var(--text-color);
         margin-bottom: 20px;
     }
 
-    .services-list {
-        list-style: none;
-        padding: 0;
+    .cards-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
     }
 
-    .services-list li {
+    .service-card {
+        background-color: var(--card-background);
+        border: var(--card-border);
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: var(--card-shadow);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .service-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .service-name {
+        font-size: 18px;
+        font-weight: bold;
+        color: var(--primary-color);
         margin-bottom: 10px;
     }
 
-    .services-list li a {
-        font-size: 16px;
-        color: var(--primary-color);
+    .service-name a {
+        color: inherit;
         text-decoration: none;
     }
 
-    .services-list li a:hover {
+    .service-name a:hover {
         text-decoration: underline;
     }
 
-    .details-button {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #fff; /* White text color */
-    background-color:#0c477d; /* Blue background */
-    border: none;
-    border-radius: 4px;
-    text-decoration: none;
-    text-align: center;
-    transition: background-color 0.3s ease;
-    margin-top: 10px; /* Add some spacing */
-}
+    .service-field, .service-price, .service-provider, .service-details {
+        font-size: 14px;
+        color: var(--secondary-color);
+        margin-bottom: 8px;
+    }
 
-.details-button:hover {
-    background-color: #1864b0; /* Darker blue on hover */
-    color: #fff; /* Ensure text remains white on hover */
-}
     /* Responsive Design */
     @media (max-width: 768px) {
         .company-profile-container {
-            margin: 0;
             padding: 20px;
         }
 
@@ -141,17 +165,12 @@
             font-size: 14px;
         }
 
-        .services-section h2 {
+        .section-title {
             font-size: 20px;
         }
 
-        .services-list li a {
-            font-size: 14px;
-        }
-
-        .details-button {
-            font-size: 14px;
-            padding: 8px 16px;
+        .cards-container {
+            grid-template-columns: 1fr;
         }
     }
 </style>
@@ -163,27 +182,36 @@
         {% if profile.profile_image %}
             <img src="{{ profile.profile_image.url }}" alt="Company Image" class="company-profile-image">
         {% else %}
-            <div class="image-placeholder"></div>
+            <div class="image-placeholder">
+                <p>Upload Image</p>
+            </div>
         {% endif %}
         <h1>{{ user.username }}'s Profile</h1>
         <p>Email: {{ user.email }}</p>
         <p>Field of Work: {{ profile.field }}</p>
         {% if user.is_company and is_company_owner %}
-            <p><a href="{% url 'users:update_profile_image' %}" class="details-button">Update Profile Image</a></p>
+            <a href="{% url 'users:update_profile_image' %}" class="details-button">Update Profile Image</a>
         {% endif %}
     </div>
 
     <div class="services-section">
-        <h2>Services Provided</h2>
-        <ul class="services-list">
+        <h2 class="section-title">Services Provided</h2>
+        <div class="cards-container">
             {% for service in services %}
-                <li><a href="{% url 'services:service_detail' service.id %}">{{ service.name }}</a></li>
+            <div class="service-card">
+                <h3 class="service-name"><a href="{% url 'services:service_detail' service.id %}">{{ service.name }}</a></h3>
+                <p class="service-field"><strong>Field:</strong> {{ service.field }}</p>
+                <p class="service-price"><strong>Price:</strong> ${{ service.price_hour }} per hour</p>
+                <p class="service-provider"><strong>Provider:</strong> {{ service.company.user.username }}</p>
+            </div>
             {% endfor %}
-        </ul>
+        </div>
     </div>
 
     {% if user.is_company and is_company_owner %}
-        <a href="{% url 'services:service_create' %}" class="details-button">Create New Service</a>
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="{% url 'services:service_create' %}" class="details-button">Create New Service</a>
+        </div>
     {% endif %}
 <!-- </div> -->
 {% endblock %}

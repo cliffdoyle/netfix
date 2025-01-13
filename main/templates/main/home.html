@@ -5,29 +5,41 @@
     NetFix
 {% endblock %}
 
-<link
-rel="stylesheet"
-type="text/css"
-href="{% static 'home/home.css' %}"
-/>
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'home/home.css' %}"/>
+{% endblock %}
 
 {% block content %}
-<div class="container" style="margin-top: 50px;">
-    <div class="header">
-        <p class="site_title">NetFix</p>
-        <img class="home_logo" src="static/css/logo.png" alt="logo">
-    </div>
+<div class="container">
+    <header class="header">
+        <div class="header-left">
+            <h1 class="site_title">NetFix</h1>
+        </div>
+        <div class="header-right">
+            <!-- Filter by Category Section -->
+            <form method="get" class="filter-form" action="{% url 'main:home' %}">
+                <select name="field" id="field" class="filter-dropdown" onchange="this.form.submit()">
+                    <option value="">All Categories</option>
+                    {% for field in fields %}
+                        <option value="{{ field }}" {% if field == selected_field %}selected{% endif %}>
+                            {{ field }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+    </header>
 
     <!-- Most Requested Services Section -->
     <section class="services-section">
-        <h1>Most Requested Services</h1>
+        <h2>Most Requested Services</h2>
         <div class="cards-container">
             {% for service in most_requested_services %}
             <div class="service-card">
                 <h3>{{ service.name }}</h3>
                 <p><strong>Field:</strong> {{ service.field }}</p>
                 <p><strong>Price:</strong> ${{ service.price_hour }} per hour</p>
-                <p><strong>Provider:</strong> 
+                <p><strong>Provider:</strong>
                     <a href="{% url 'users:company_profile' username=service.company.user.username %}">
                         {{ service.company.user.username }}
                     </a>
@@ -38,23 +50,6 @@ href="{% static 'home/home.css' %}"
             {% empty %}
             <p>No services have been requested yet.</p>
             {% endfor %}
-        </div>
-    </section>
-
-    <!-- Filter by Category Section -->
-    <section class="filter-section">
-        <div class="filter-card">
-            <h2>Filter by Category</h2>
-            <form method="get" class="filter-form">
-                <select name="field" id="field" class="filter-dropdown" onchange="this.form.submit()">
-                    <option value="">All Categories</option>
-                    {% for field in fields %}
-                    <option value="{{ field }}" {% if field == selected_field %}selected{% endif %}>
-                        {{ field }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </form>
         </div>
     </section>
 
@@ -72,11 +67,10 @@ href="{% static 'home/home.css' %}"
                 <p><strong>Company:</strong> {{ service.company.user.username }}</p>
                 <a class="btn-primary" href="{% url 'services:service_detail' service.id %}">View Details</a>
             </div>
+            {% empty %}
+            <p>No services available in this category yet.</p>
             {% endfor %}
         </div>
-        {% if not services %}
-        <p>No services available in this category yet.</p>
-        {% endif %}
     </section>
     {% endif %}
 </div>

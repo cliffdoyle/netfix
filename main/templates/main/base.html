@@ -2,15 +2,14 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="{% static 'home/base.css' %}"
-    />
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Title{% endblock %}</title>
+    <!-- Base CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'home/base.css' %}"/>
+    <!-- Block for additional CSS -->
+    {% block extra_css %}{% endblock %}
   </head>
   <body>
     {% include 'main/navbar.html' %}
@@ -18,8 +17,8 @@
     <div class='content'>
       {% block content %} replace me {% endblock %}
     </div>
+    <footer>
+      <p>&copy; 2025 NetFix - All Rights Reserved</p>
+    </footer>
   </body>
-  <footer>
-    <p>&copy; 2025 NetFix - All Rights Reserved</p>
-</footer>
 </html>

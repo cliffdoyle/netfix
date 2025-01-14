@@ -6,28 +6,210 @@
 {% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'home/home.css' %}"/>
+<style>
+    :root {
+        --primary-color: #007bff;
+        --secondary-color: #6c757d;
+        --background-color: #f8f9fa;
+        --text-color: #343a40;
+        --card-background: #ffffff;
+        --card-border: 1px solid #e0e0e0;
+        --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        line-height: 1.6;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* Header */
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 0;
+        border-bottom: 2px solid var(--primary-color);
+        margin-bottom: 40px;
+    }
+
+    .header-left .site_title {
+        font-size: 32px;
+        font-weight: bold;
+        color: var(--primary-color);
+        margin: 0;
+    }
+
+    /* Dropdown Styles */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown .filter-dropdown {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid var(--secondary-color);
+        border-radius: 4px;
+        background-color: var(--card-background);
+        color: var(--text-color);
+        cursor: pointer;
+        transition: border-color 0.3s ease;
+    }
+
+    .dropdown .filter-dropdown:hover {
+        border-color: var(--primary-color);
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: var(--card-background);
+        border: 1px solid var(--secondary-color);
+        border-radius: 4px;
+        box-shadow: var(--card-shadow);
+        min-width: 160px;
+        z-index: 1000;
+    }
+
+    .dropdown-content a {
+        display: block;
+        padding: 10px;
+        font-size: 14px;
+        color: var(--text-color);
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .dropdown-content a:hover {
+        background-color: var(--primary-color);
+        color: #fff;
+    }
+
+    .dropdown-content a.active {
+        background-color: var(--primary-color);
+        color: #fff;
+    }
+
+    /* Show dropdown on hover */
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    /* Services Section */
+    .services-section, .category-services-section {
+        margin-bottom: 40px;
+    }
+
+    .services-section h2, .category-services-section h2 {
+        font-size: 28px;
+        font-weight: bold;
+        color: var(--primary-color);
+        margin-bottom: 20px;
+    }
+
+    .cards-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    .service-card {
+        background-color: var(--card-background);
+        border: var(--card-border);
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: var(--card-shadow);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .service-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .service-card h3 {
+        font-size: 20px;
+        font-weight: bold;
+        color: var(--primary-color);
+        margin-bottom: 10px;
+    }
+
+    .service-card p {
+        font-size: 14px;
+        color: var(--secondary-color);
+        margin-bottom: 8px;
+    }
+
+    .service-card .btn-primary {
+        display: inline-block;
+        padding: 8px 16px;
+        font-size: 14px;
+        font-weight: bold;
+        color: #fff;
+        background-color: var(--primary-color);
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .service-card .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .header-right {
+            margin-top: 10px;
+        }
+
+        .header-left .site_title {
+            font-size: 28px;
+        }
+
+        .services-section h2, .category-services-section h2 {
+            font-size: 24px;
+        }
+
+        .cards-container {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
 {% endblock %}
 
 {% block content %}
 <div class="container">
+    <!-- Header -->
     <header class="header">
         <div class="header-left">
             <h1 class="site_title">NetFix</h1>
         </div>
-        <div class="header-right">
-            <!-- Filter by Category Section -->
-            <form method="get" class="filter-form" action="{% url 'main:home' %}">
-                <select name="field" id="field" class="filter-dropdown" onchange="this.form.submit()">
-                    <option value="">All Categories</option>
+        <!-- <div class="header-right">
+            <!- Filter by Category Section -->
+            <!-- <div class="dropdown">
+                <button class="filter-dropdown">All Categories</button>
+                <div class="dropdown-content">
                     {% for field in fields %}
-                        <option value="{{ field }}" {% if field == selected_field %}selected{% endif %}>
-                            {{ field }}
-                        </option>
+                        <a href="?field={{ field }}" {% if field == selected_field %}class="active"{% endif %}>{{ field }}</a>
                     {% endfor %}
-                </select>
-            </form>
-        </div>
+                </div>
+            </div>
+        </div> -->
     </header>
 
     <!-- Most Requested Services Section -->

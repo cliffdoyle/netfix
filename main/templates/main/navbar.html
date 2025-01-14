@@ -1,7 +1,7 @@
 <nav class="navbar">
     <style>
         :root {
-            --navbar-bg:var(--navbar-brand-color);
+            --navbar-bg: var(--navbar-brand-color);
             --navbar-text: #343a40;
             --navbar-hover: #007bff;
             --navbar-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -82,6 +82,7 @@
 
         .nav-item {
             margin: 0 10px;
+            position: relative; /* Needed for dropdown positioning */
         }
 
         .nav-link {
@@ -92,15 +93,16 @@
             padding: 8px 12px;
             border-radius: 4px;
             transition: background-color 0.3s ease, color 0.3s ease;
+            display: block; /* Ensure links behave like block elements */
         }
 
         .nav-link:hover {
             background-color: var(--navbar-hover);
-            color: #5e5656;
+            color: #ffffff;
         }
 
         /* Dropdown Menu */
-        .dropdown-menu {
+        .dropdown-content {
             display: none;
             position: absolute;
             background-color: var(--navbar-bg);
@@ -108,9 +110,12 @@
             border-radius: 4px;
             padding: 10px 0;
             z-index: 1000;
+            min-width: 160px; /* Adjust as needed */
+            top: 100%; /* Position below the parent link */
+            left: 0;
         }
 
-        .dropdown-item {
+        .dropdown-content a {
             display: block;
             padding: 8px 16px;
             color: var(--navbar-text);
@@ -118,13 +123,13 @@
             transition: background-color 0.3s ease;
         }
 
-        .dropdown-item:hover {
+        .dropdown-content a:hover {
             background-color: var(--navbar-hover);
             color: #ffffff;
         }
 
         /* Show dropdown on hover */
-        .nav-item.dropdown:hover .dropdown-menu {
+        .nav-item.dropdown:hover .dropdown-content {
             display: block;
         }
 
@@ -156,6 +161,11 @@
             .nav-item {
                 margin: 10px 0;
             }
+
+            .dropdown-content {
+                position: static; /* Dropdown content stacks vertically on mobile */
+                box-shadow: none;
+            }
         }
     </style>
 
@@ -173,6 +183,17 @@
             <ul class="navbar-nav">
                 <li><a href="/" class="nav-link">Home</a></li>
                 <li><a href="{% url 'services:service_list' %}" class="nav-link">View All Services</a></li>
+                <!-- All Categories Dropdown (Visible only on Home Page) -->
+                {% if request.path == '/' %}
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link">All Categories</a>
+                        <div class="dropdown-content">
+                            {% for field in fields %}
+                                <a href="?field={{ field }}" {% if field == selected_field %}class="active"{% endif %}>{{ field }}</a>
+                            {% endfor %}
+                        </div>
+                    </li>
+                {% endif %}
             </ul>
 
             <!-- User Actions -->

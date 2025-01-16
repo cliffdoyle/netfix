@@ -1,5 +1,6 @@
 from django import forms
 from .models import Service, ServiceRequest,ServiceRating
+from django.utils import timezone
 
 class CreateNewService(forms.ModelForm):
     class Meta:
@@ -9,6 +10,15 @@ class CreateNewService(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)  # Get the user from kwargs
         super(CreateNewService, self).__init__(*args, **kwargs)
+        
+        #   # Add date_created as a read-only field
+        # self.fields['date_created'] = forms.DateTimeField(
+        #     required=False,
+        #     disabled=True,
+        #     initial=timezone.now(),  # Set the initial value to the current time
+        #     widget=forms.DateTimeInput(attrs={'readonly': 'readonly'})
+        # )
+
         # adding placeholders to form fields
         self.fields['name'].widget.attrs['placeholder'] = 'Enter Service Name'
         self.fields['description'].widget.attrs['placeholder'] = 'Enter Description'
